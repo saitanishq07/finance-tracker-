@@ -7,15 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root {
+:root{
   --bg:#020408;--bg2:#050c14;--panel:#080f1a;--panel2:#0c1624;
   --border:#0d2a3d;--border2:#0f3550;
   --green:#00ff88;--green2:#00cc6a;
-  --cyan:#00e5ff;--red:#ff3366;--yellow:#ffcc00;
+  --cyan:#00e5ff;--red:#ff3366;--yellow:#ffcc00;--orange:#ff8800;
   --muted:#2a4a6a;--text:#c8e8f8;--text2:#6a9ab8;
   --font-d:'Orbitron',monospace;--font-m:'Share Tech Mono',monospace;--font-b:'Rajdhani',sans-serif;
   --glow-g:0 0 20px #00ff8855,0 0 40px #00ff8822;
-  --glow-c:0 0 20px #00e5ff55;--glow-r:0 0 20px #ff336655;
+  --glow-c:0 0 20px #00e5ff55;--glow-r:0 0 20px #ff336655;--glow-y:0 0 20px #ffcc0055;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh;overflow-x:hidden;position:relative}
@@ -33,7 +33,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 @keyframes fin{to{opacity:1}}
 @keyframes pglow{0%,100%{text-shadow:0 0 20px #00ff8855,0 0 40px #00ff8822}50%{text-shadow:0 0 40px #00ff88aa,0 0 80px #00ff8844}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* HEADER */
@@ -56,12 +55,6 @@ header{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,var(-
 .si .v{color:var(--text2)}
 #ss{color:var(--yellow)}#ss.ok{color:var(--green)}#ss.er{color:var(--red)}
 
-/* SETUP BANNER */
-#setup-banner{background:linear-gradient(135deg,#ff336610,#ffcc0010);border:1px solid #ff336644;border-radius:8px;padding:1rem 1.5rem;margin:1.5rem 2.5rem 0;font-family:var(--font-m);font-size:.78rem;color:var(--yellow);display:flex;align-items:center;gap:1rem}
-#setup-banner input{flex:1;background:#000;border:1px solid var(--yellow);border-radius:4px;color:var(--green);padding:.4rem .7rem;font-family:var(--font-m);font-size:.75rem;outline:none}
-#setup-banner button{background:var(--yellow);color:#000;border:none;border-radius:4px;padding:.45rem 1rem;font-family:var(--font-m);font-size:.72rem;font-weight:bold;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;transition:opacity .2s}
-#setup-banner button:hover{opacity:.85}
-
 /* TABS */
 .tabs{display:flex;padding:0 2.5rem;border-bottom:1px solid var(--border2);background:var(--bg);position:sticky;top:64px;z-index:90}
 .tab{padding:.85rem 1.4rem;font-family:var(--font-m);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
@@ -79,30 +72,44 @@ main{padding:2rem 2.5rem;max-width:1500px;margin:0 auto;position:relative;z-inde
 .slbl::before{content:'//';color:var(--green)}
 .slbl::after{content:'';flex:1;height:1px;background:var(--border2)}
 
-/* KPI */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
-.kpi{background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:1.4rem;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+/* KPI ROW — now 5 cards */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem}
+.kpi{background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:1.3rem;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
 .kpi:hover{transform:translateY(-2px)}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:1px}
 .kpi.sal::before{background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 20px var(--green)}
+.kpi.inc::before{background:linear-gradient(90deg,transparent,var(--orange),transparent)}
+.kpi.tot::before{background:linear-gradient(90deg,transparent,var(--yellow),transparent)}
 .kpi.sp::before{background:linear-gradient(90deg,transparent,var(--red),transparent)}
 .kpi.sv::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
-.kpi.rt::before{background:linear-gradient(90deg,transparent,var(--yellow),transparent)}
-.kpi-corner{position:absolute;top:0;right:0;width:40px;height:40px;border-left:1px solid;border-bottom:1px solid;border-radius:0 0 0 8px;opacity:.3}
-.kpi.sal .kpi-corner{border-color:var(--green)}.kpi.sp .kpi-corner{border-color:var(--red)}
-.kpi.sv .kpi-corner{border-color:var(--cyan)}.kpi.rt .kpi-corner{border-color:var(--yellow)}
-.kpi-lbl{font-family:var(--font-m);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
-.kpi-val{font-family:var(--font-d);font-size:1.8rem;font-weight:700;line-height:1}
+.kpi-corner{position:absolute;top:0;right:0;width:36px;height:36px;border-left:1px solid;border-bottom:1px solid;border-radius:0 0 0 8px;opacity:.3}
+.kpi.sal .kpi-corner{border-color:var(--green)}.kpi.inc .kpi-corner{border-color:var(--orange)}
+.kpi.tot .kpi-corner{border-color:var(--yellow)}.kpi.sp .kpi-corner{border-color:var(--red)}
+.kpi.sv  .kpi-corner{border-color:var(--cyan)}
+.kpi-lbl{font-family:var(--font-m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.kpi-val{font-family:var(--font-d);font-size:1.5rem;font-weight:700;line-height:1}
 .kpi.sal .kpi-val{color:var(--green);text-shadow:0 0 20px #00ff8866}
+.kpi.inc .kpi-val{color:var(--orange);text-shadow:0 0 20px #ff880044}
+.kpi.tot .kpi-val{color:var(--yellow);text-shadow:0 0 20px #ffcc0044}
 .kpi.sp  .kpi-val{color:var(--red);text-shadow:0 0 20px #ff336644}
 .kpi.sv  .kpi-val{color:var(--cyan);text-shadow:0 0 20px #00e5ff44}
-.kpi.rt  .kpi-val{color:var(--yellow);text-shadow:0 0 20px #ffcc0044}
-.kpi-sub{font-family:var(--font-m);font-size:.65rem;color:var(--muted);margin-top:.5rem}
-.sal-row{display:flex;align-items:center;gap:.6rem;margin-top:.2rem}
-#sal-d{font-family:var(--font-d);font-size:1.8rem;font-weight:700;color:var(--green);text-shadow:0 0 20px #00ff8866}
-#sal-i{display:none;background:transparent;border:none;border-bottom:1px solid var(--green);outline:none;color:var(--green);font-family:var(--font-d);font-size:1.6rem;font-weight:700;width:160px}
-.edit-btn{background:none;border:1px solid var(--border2);color:var(--muted);padding:.15rem .5rem;border-radius:3px;cursor:pointer;font-family:var(--font-m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;transition:all .2s}
-.edit-btn:hover{border-color:var(--green);color:var(--green);box-shadow:0 0 8px var(--green)}
+.kpi-sub{font-family:var(--font-m);font-size:.6rem;color:var(--muted);margin-top:.4rem}
+
+/* ── SALARY EDIT PANEL ── */
+.sal-panel{background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:1.4rem 1.6rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.sal-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 20px var(--green)}
+.sal-panel-title{font-family:var(--font-m);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem}
+.sal-panel-title::before{content:'// '}
+.sal-fields{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:1rem;align-items:end}
+.sal-field label{display:block;font-family:var(--font-m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.sal-field label::before{content:'$ ';color:var(--green)}
+.sal-field input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:.6rem .8rem;font-family:var(--font-m);font-size:.85rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.sal-field input:focus{border-color:var(--green);box-shadow:0 0 0 1px var(--green),inset 0 0 10px rgba(0,255,136,.05)}
+.sal-save-btn{background:linear-gradient(135deg,var(--green2),var(--green));color:#000;border:none;border-radius:4px;padding:.62rem 1.2rem;font-family:var(--font-m);font-size:.72rem;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:opacity .2s,box-shadow .2s;box-shadow:0 0 15px rgba(0,255,136,.3)}
+.sal-save-btn:hover{opacity:.9;box-shadow:0 0 25px rgba(0,255,136,.5)}
+.sal-save-btn:disabled{opacity:.5;pointer-events:none}
+.sal-note{font-family:var(--font-m);font-size:.65rem;color:var(--muted);margin-top:.8rem}
+.sal-note span{color:var(--orange)}
 
 /* BUDGET BAR */
 .bud-card{background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:2rem}
@@ -118,7 +125,7 @@ main{padding:2rem 2.5rem;max-width:1500px;margin:0 auto;position:relative;z-inde
 .charts-row{display:grid;grid-template-columns:1fr 1.4fr;gap:1.2rem;margin-bottom:1.5rem}
 .chart-panel{background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:1.4rem;position:relative;overflow:hidden}
 .chart-panel::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at top left,rgba(0,229,255,.03),transparent 60%);pointer-events:none}
-.panel-t{font-family:var(--font-m);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+.panel-t{font-family:var(--font-m);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.2rem}
 .panel-t::before{content:'[ '}.panel-t::after{content:' ]'}
 
 /* CAT GRID */
@@ -135,7 +142,7 @@ main{padding:2rem 2.5rem;max-width:1500px;margin:0 auto;position:relative;z-inde
 
 /* EXP PAGE */
 .exp-lay{display:grid;grid-template-columns:340px 1fr;gap:1.5rem;align-items:start}
-.form-panel{background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:1.6rem;position:sticky;top:110px;overflow:hidden}
+.form-panel{background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:1.6rem;position:sticky;top:115px;overflow:hidden}
 .form-panel::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,var(--green),transparent);box-shadow:0 0 20px var(--green)}
 .form-t{font-family:var(--font-d);font-size:.9rem;font-weight:700;color:var(--green);letter-spacing:.1em;margin-bottom:1.5rem;text-shadow:0 0 10px var(--green)}
 .form-t::before{content:'> '}
@@ -171,12 +178,14 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
 .del-btn:disabled{opacity:.4;pointer-events:none}
 
 /* MONTHLY */
-.m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem}
+.m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem}
 .m-card{background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:1.3rem;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s}
 .m-card:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,229,255,.1)}
 .m-lbl{font-family:var(--font-m);font-size:.65rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.5rem}
-.m-sp{font-family:var(--font-d);font-size:1.4rem;font-weight:700;color:var(--red)}
+.m-inc-tag{font-family:var(--font-m);font-size:.6rem;color:var(--orange);margin-bottom:.3rem}
+.m-sp{font-family:var(--font-d);font-size:1.3rem;font-weight:700;color:var(--red)}
 .m-sv{font-family:var(--font-m);font-size:.68rem;color:var(--green);margin-top:.2rem}
+.m-sal{font-family:var(--font-m);font-size:.62rem;color:var(--muted);margin-top:.2rem}
 .m-n{font-family:var(--font-m);font-size:.6rem;color:var(--muted);margin-top:.3rem}
 .m-bar{margin-top:.8rem;height:3px;background:var(--border2);border-radius:99px;overflow:hidden}
 .m-bar-f{height:100%;background:linear-gradient(90deg,var(--green),var(--red));border-radius:99px}
@@ -191,13 +200,15 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
 #toast.er{border-left-color:var(--red);color:var(--red);box-shadow:var(--glow-r)}
 #toast.show{transform:translateY(0);opacity:1}
 
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr)}.sal-fields{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){
-  header,.tabs,main,#syncbar,#setup-banner{padding-left:1rem;padding-right:1rem}
+  header,.tabs,main,#syncbar{padding-left:1rem;padding-right:1rem}
   .kpi-row{grid-template-columns:1fr 1fr}
   .charts-row{grid-template-columns:1fr}
   .cat-grid{grid-template-columns:1fr 1fr}
   .exp-lay{grid-template-columns:1fr}
   .form-panel{position:static}
+  .sal-fields{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -213,7 +224,7 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
 <header>
   <div class="logo-wrap">
     <div class="logo-icon">₹</div>
-    <div><div class="logo-text">FINTRACK</div><div class="logo-sub">Personal Finance OS // v2.0</div></div>
+    <div><div class="logo-text">FINTRACK</div><div class="logo-sub">Personal Finance OS // v3.0</div></div>
   </div>
   <div class="hdr-r">
     <div class="stat-dot"><div class="dot"></div><span>LIVE</span></div>
@@ -226,16 +237,10 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
 </header>
 
 <div id="syncbar">
-  <div class="si">SYS <span class="v">FINTRACK_OS</span></div>
+  <div class="si">SYS <span class="v">FINTRACK_OS v3</span></div>
   <div class="si">STORAGE <span class="v">GOOGLE SHEETS</span></div>
   <div class="si">STATUS <span id="ss">CHECKING...</span></div>
   <div class="si" style="margin-left:auto">LAST SYNC <span class="v" id="ls">—</span></div>
-</div>
-
-<div id="setup-banner" style="display:none">
-  <span>⚠ PASTE YOUR APPS SCRIPT URL →</span>
-  <input type="text" id="url-inp" placeholder="https://script.google.com/macros/s/...../exec">
-  <button onclick="saveUrl()">CONNECT</button>
 </div>
 
 <nav class="tabs">
@@ -246,19 +251,50 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
 
 <main>
 
-<!-- DASHBOARD -->
+<!-- ═══ DASHBOARD ═══ -->
 <div class="page active" id="page-dash">
+
+  <!-- Salary Edit Panel -->
+  <div class="sal-panel">
+    <div class="sal-panel-title">INCOME CONFIGURATION — <span id="sal-month-lbl" style="color:var(--cyan)">—</span></div>
+    <div class="sal-fields">
+      <div class="sal-field">
+        <label>Base Salary (₹)</label>
+        <input type="number" id="sal-base" placeholder="25000" min="0">
+      </div>
+      <div class="sal-field">
+        <label>Incentive (₹)</label>
+        <input type="number" id="sal-inc" placeholder="0" min="0">
+      </div>
+      <div class="sal-field">
+        <label>Incentive Note</label>
+        <input type="text" id="sal-note" placeholder="e.g. Performance bonus, Q1 target achieved">
+      </div>
+      <button class="sal-save-btn" id="sal-save-btn" onclick="saveMonthSalary()">[ SAVE INCOME ]</button>
+    </div>
+    <div class="sal-note">Total Income = Base + Incentive &nbsp;|&nbsp; Current Total: <span id="sal-total-preview" style="color:var(--yellow)">₹0</span> &nbsp;|&nbsp; Incentive: <span id="sal-inc-preview" style="color:var(--orange)">₹0</span></div>
+  </div>
+
+  <!-- KPI Cards — 5 -->
   <div class="slbl">KPI OVERVIEW</div>
   <div class="kpi-row">
     <div class="kpi sal">
       <div class="kpi-corner"></div>
-      <div class="kpi-lbl">Monthly Salary</div>
-      <div class="sal-row">
-        <div id="sal-d">₹0</div>
-        <button class="edit-btn" onclick="toggleSal()">EDIT</button>
-        <input type="number" id="sal-i" onblur="saveSal()" onkeydown="if(event.key==='Enter')saveSal()">
-      </div>
-      <div class="kpi-sub">tap EDIT to update</div>
+      <div class="kpi-lbl">Base Salary</div>
+      <div class="kpi-val" id="kpi-sal">₹0</div>
+      <div class="kpi-sub">this month</div>
+    </div>
+    <div class="kpi inc">
+      <div class="kpi-corner"></div>
+      <div class="kpi-lbl">Incentive</div>
+      <div class="kpi-val" id="kpi-inc">₹0</div>
+      <div class="kpi-sub" id="kpi-inc-note">—</div>
+    </div>
+    <div class="kpi tot">
+      <div class="kpi-corner"></div>
+      <div class="kpi-lbl">Total Income</div>
+      <div class="kpi-val" id="kpi-tot">₹0</div>
+      <div class="kpi-sub">salary + incentive</div>
     </div>
     <div class="kpi sp">
       <div class="kpi-corner"></div>
@@ -270,16 +306,11 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
       <div class="kpi-corner"></div>
       <div class="kpi-lbl">Net Saved</div>
       <div class="kpi-val" id="kpi-sv">₹0</div>
-      <div class="kpi-sub">salary − expenses</div>
-    </div>
-    <div class="kpi rt">
-      <div class="kpi-corner"></div>
-      <div class="kpi-lbl">Savings Rate</div>
-      <div class="kpi-val" id="kpi-rt">0%</div>
-      <div class="kpi-sub">of income retained</div>
+      <div class="kpi-sub" id="kpi-rt-sub">0% savings rate</div>
     </div>
   </div>
 
+  <!-- Budget Bar -->
   <div class="bud-card">
     <div class="bud-lc">
       <div class="bud-lbl">Budget Consumed</div>
@@ -291,17 +322,20 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
     </div>
   </div>
 
+  <!-- Charts -->
   <div class="slbl">DATA VISUALIZATION</div>
   <div class="charts-row">
     <div class="chart-panel"><div class="panel-t">CATEGORY SPLIT</div><canvas id="cat-ch"></canvas></div>
     <div class="chart-panel"><div class="panel-t">DAILY BURN RATE</div><canvas id="day-ch"></canvas></div>
   </div>
 
+  <!-- Category Breakdown -->
   <div class="slbl">CATEGORY BREAKDOWN</div>
   <div class="cat-grid" id="cat-grid"></div>
+
 </div>
 
-<!-- EXPENSES -->
+<!-- ═══ EXPENSES ═══ -->
 <div class="page" id="page-exp">
   <div class="exp-lay">
     <div class="form-panel">
@@ -346,7 +380,7 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
   </div>
 </div>
 
-<!-- MONTHLY -->
+<!-- ═══ MONTHLY ═══ -->
 <div class="page" id="page-mon">
   <div class="slbl">12-MONTH HISTORY</div>
   <div class="m-grid" id="m-grid"></div>
@@ -356,162 +390,221 @@ tbody td{padding:.85rem 1.2rem;font-size:.85rem}
 <div id="toast">OK</div>
 
 <script>
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const COLORS={'🍽️ Food & Dining':'#ff3366','🚗 Transport':'#ffcc00','🛒 Groceries':'#00ff88','💡 Utilities':'#00e5ff','🏥 Health':'#9b59b6','🎮 Entertainment':'#c8a97e','👕 Shopping':'#e67e22','🏠 Rent / Housing':'#3498db','📚 Education':'#1abc9c','✈️ Travel':'#e91e63','💰 Savings / Investment':'#27ae60','🔧 Other':'#7f8c8d'};
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxhe83BU3VPxVU5ByRFxHEY8UNmCHvrZmn4Vn88jGAICVrQYuDnWIq3I0CvtoG-YonkiQ/exec';
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const COLORS = {
+  '🍽️ Food & Dining':'#ff3366','🚗 Transport':'#ffcc00','🛒 Groceries':'#00ff88',
+  '💡 Utilities':'#00e5ff','🏥 Health':'#9b59b6','🎮 Entertainment':'#c8a97e',
+  '👕 Shopping':'#e67e22','🏠 Rent / Housing':'#3498db','📚 Education':'#1abc9c',
+  '✈️ Travel':'#e91e63','💰 Savings / Investment':'#27ae60','🔧 Other':'#7f8c8d'
+};
 
-let URL_='https://script.google.com/macros/s/AKfycbxhe83BU3VPxVU5ByRFxHEY8UNmCHvrZmn4Vn88jGAICVrQYuDnWIq3I0CvtoG-YonkiQ/exec',salary=25000,expenses=[],catCh=null,dayCh=null;
-let vY=new Date().getFullYear(),vM=new Date().getMonth();
+let expenses = [], catCh = null, dayCh = null;
+let vY = new Date().getFullYear(), vM = new Date().getMonth();
 
-/* URL */
-function saveUrl(){
-  const v=document.getElementById('url-inp').value.trim();
-  if(!v.startsWith('http')){toast('Invalid URL',1);return;}
-  URL_=v;localStorage.setItem('ft_url',v);
-  document.getElementById('setup-banner').style.display='none';
-  toast('Connected to Google Sheets!');
-  initData();
-}
-function checkBanner(){
-  URL_=localStorage.getItem('ft_url')||'';
-  salary=Number(localStorage.getItem('ft_sal')||25000);
-  if(URL_) document.getElementById('setup-banner').style.display='none';
-}
+// Per-month salary state
+let monthSalary = { baseSalary: 25000, incentive: 0, incentiveNote: '', totalIncome: 25000 };
 
-/* API */
-async function api(p,method='GET'){
-  if(!URL_){toast('Paste Apps Script URL first!',1);throw new Error('no url');}
+// Cache for all monthly salary data (for monthly view)
+let salaryCache = {}; // key: "YYYY-MM"
+
+/* ── API ─────────────────────────────────── */
+async function api(params, method='GET') {
   setSS('SYNCING...',0,0);
-  let url,opts;
-  if(method==='GET'){url=URL_+'?'+new URLSearchParams(p);opts={};}
-  else{url=URL_;opts={method:'POST',body:JSON.stringify(p)};}
-  const r=await fetch(url,opts);
-  const d=await r.json();
-  if(d.error)throw new Error(d.error);
-  setSS('SYNCED',1,0);setLS();
+  let url, opts;
+  if (method === 'GET') {
+    url = SCRIPT_URL + '?' + new URLSearchParams(params);
+    opts = {};
+  } else {
+    url = SCRIPT_URL;
+    opts = { method: 'POST', body: JSON.stringify(params) };
+  }
+  const r = await fetch(url, opts);
+  const d = await r.json();
+  if (d.error) throw new Error(d.error);
+  setSS('SYNCED', 1, 0); setLS();
   return d;
 }
+
 function setSS(t,ok,er){const e=document.getElementById('ss');e.textContent=t;e.className=ok?'ok':er?'er':'';}
 function setLS(){const d=new Date();document.getElementById('ls').textContent=[d.getHours(),d.getMinutes(),d.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');}
 
-/* INIT */
-async function initData(){
-  try{
-    const s=await api({action:'getSalary'});
-    salary=s.salary;localStorage.setItem('ft_sal',salary);
-    await loadExp();
-    setSS('ONLINE',1,0);
-  }catch(e){
-    setSS('OFFLINE — LOCAL MODE',0,1);
-    const c=localStorage.getItem('ft_exp');
-    if(c)expenses=JSON.parse(c);
+/* ── INIT ───────────────────────────────── */
+async function initData() {
+  try {
+    await Promise.all([loadMonthSalary(), loadExp()]);
+    // Also load all salaries for monthly view cache
+    loadAllSalaries();
+    setSS('ONLINE', 1, 0);
+  } catch(e) {
+    setSS('OFFLINE — LOCAL MODE', 0, 1);
+    const ce = localStorage.getItem('ft_exp');
+    if (ce) expenses = JSON.parse(ce);
+    const cs = localStorage.getItem(`ft_sal_${vY}_${vM+1}`);
+    if (cs) monthSalary = JSON.parse(cs);
     render();
   }
 }
-async function loadExp(){
-  const d=await api({action:'getExpenses',month:vM+1,year:vY});
-  expenses=d.expenses;
-  localStorage.setItem('ft_exp',JSON.stringify(expenses));
+
+async function loadMonthSalary() {
+  const d = await api({ action: 'getMonthSalary', month: vM+1, year: vY });
+  monthSalary = d;
+  salaryCache[`${vY}-${vM+1}`] = d;
+  localStorage.setItem(`ft_sal_${vY}_${vM+1}`, JSON.stringify(d));
+  // Populate the edit form fields
+  document.getElementById('sal-base').value = d.baseSalary || '';
+  document.getElementById('sal-inc').value  = d.incentive  || '';
+  document.getElementById('sal-note').value = d.incentiveNote || '';
+  updateSalaryPreview();
+}
+
+async function loadAllSalaries() {
+  try {
+    const d = await api({ action: 'getAllSalaries' });
+    d.salaries.forEach(s => { salaryCache[`${s.year}-${s.month}`] = s; });
+    renderMonthly();
+  } catch {}
+}
+
+async function loadExp() {
+  const d = await api({ action: 'getExpenses', month: vM+1, year: vY });
+  expenses = d.expenses;
+  localStorage.setItem('ft_exp', JSON.stringify(expenses));
   render();
 }
 
-/* SALARY */
-function toggleSal(){
-  const d=document.getElementById('sal-d'),i=document.getElementById('sal-i');
-  if(!i.style.display||i.style.display==='none'){d.style.display='none';i.style.display='block';i.value=salary;i.focus();i.select();}
-  else saveSal();
-}
-async function saveSal(){
-  const i=document.getElementById('sal-i');
-  const v=parseFloat(i.value);
-  if(!isNaN(v)&&v>=0){salary=v;localStorage.setItem('ft_sal',v);try{await api({action:'setSalary',salary:v},'POST');}catch{}}
-  i.style.display='none';document.getElementById('sal-d').style.display='';render();
+/* ── SALARY SAVE ────────────────────────── */
+function updateSalaryPreview() {
+  const base = Number(document.getElementById('sal-base').value) || 0;
+  const inc  = Number(document.getElementById('sal-inc').value)  || 0;
+  document.getElementById('sal-total-preview').textContent = fmt(base + inc);
+  document.getElementById('sal-inc-preview').textContent   = fmt(inc);
 }
 
-/* ADD */
-async function addExpense(){
-  const amt=parseFloat(document.getElementById('f-amt').value);
-  const cat=document.getElementById('f-cat').value;
-  const dsc=document.getElementById('f-dsc').value.trim();
-  const dt=document.getElementById('f-dt').value;
-  if(!amt||amt<=0){toast('Enter valid amount!',1);return;}
-  if(!cat){toast('Select category!',1);return;}
-  if(!dt){toast('Pick a date!',1);return;}
-  const btn=document.getElementById('add-btn');
-  btn.textContent='[ SYNCING... ]';btn.disabled=true;
-  try{
-    const r=await api({action:'addExpense',amount:amt,category:cat,description:dsc||'—',date:dt},'POST');
-    const d=new Date(dt);
-    if(d.getFullYear()===vY&&d.getMonth()===vM)expenses.push({id:r.id,amount:amt,category:cat,description:dsc||'—',date:dt});
-    toast('Logged to Google Sheets!');
-    document.getElementById('f-amt').value='';document.getElementById('f-dsc').value='';
+// Live preview on typing
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('sal-base').addEventListener('input', updateSalaryPreview);
+  document.getElementById('sal-inc').addEventListener('input', updateSalaryPreview);
+});
+
+async function saveMonthSalary() {
+  const base = Number(document.getElementById('sal-base').value) || 0;
+  const inc  = Number(document.getElementById('sal-inc').value)  || 0;
+  const note = document.getElementById('sal-note').value.trim();
+  const btn  = document.getElementById('sal-save-btn');
+  btn.textContent = '[ SAVING... ]'; btn.disabled = true;
+  try {
+    const r = await api({ action:'setMonthSalary', month:vM+1, year:vY, baseSalary:base, incentive:inc, incentiveNote:note }, 'POST');
+    monthSalary = { baseSalary:base, incentive:inc, incentiveNote:note, totalIncome:r.totalIncome };
+    salaryCache[`${vY}-${vM+1}`] = monthSalary;
+    localStorage.setItem(`ft_sal_${vY}_${vM+1}`, JSON.stringify(monthSalary));
+    toast(`Income saved for ${MONTHS[vM]}!`);
     render();
-  }catch(e){toast('Sync failed: '+e.message,1);}
-  btn.textContent='[ EXECUTE ENTRY ]';btn.disabled=false;
+  } catch(e) { toast('Save failed: '+e.message, 1); }
+  btn.textContent = '[ SAVE INCOME ]'; btn.disabled = false;
 }
 
-/* DELETE */
-async function delExp(id,btn){
-  btn.disabled=true;btn.textContent='...';
-  try{
+/* ── ADD EXPENSE ────────────────────────── */
+async function addExpense() {
+  const amt = parseFloat(document.getElementById('f-amt').value);
+  const cat = document.getElementById('f-cat').value;
+  const dsc = document.getElementById('f-dsc').value.trim();
+  const dt  = document.getElementById('f-dt').value;
+  if (!amt||amt<=0){toast('Enter valid amount!',1);return;}
+  if (!cat){toast('Select category!',1);return;}
+  if (!dt){toast('Pick a date!',1);return;}
+  const btn = document.getElementById('add-btn');
+  btn.textContent='[ SYNCING... ]'; btn.disabled=true;
+  try {
+    const r = await api({action:'addExpense',amount:amt,category:cat,description:dsc||'—',date:dt},'POST');
+    const d = new Date(dt);
+    if (d.getFullYear()===vY && d.getMonth()===vM)
+      expenses.push({id:r.id,amount:amt,category:cat,description:dsc||'—',date:dt});
+    toast('Logged to Google Sheets!');
+    document.getElementById('f-amt').value=''; document.getElementById('f-dsc').value='';
+    render();
+  } catch(e) { toast('Sync failed: '+e.message,1); }
+  btn.textContent='[ EXECUTE ENTRY ]'; btn.disabled=false;
+}
+
+/* ── DELETE ─────────────────────────────── */
+async function delExp(id, btn) {
+  btn.disabled=true; btn.textContent='...';
+  try {
     await api({action:'deleteExpense',id},'POST');
-    expenses=expenses.filter(e=>e.id!=id);render();toast('Record deleted.');
-  }catch(e){toast('Delete failed: '+e.message,1);btn.disabled=false;btn.textContent='✕';}
+    expenses=expenses.filter(e=>e.id!=id); render(); toast('Record deleted.');
+  } catch(e) { toast('Delete failed: '+e.message,1); btn.disabled=false; btn.textContent='✕'; }
 }
 
-/* RENDER */
-function render(){
-  const lbl=MONTHS[vM]+' '+vY;
-  document.getElementById('m-lbl').textContent=lbl;
-  const spent=expenses.reduce((s,e)=>s+Number(e.amount),0);
-  const saved=salary-spent;
-  const rate=salary>0?Math.round((saved/salary)*100):0;
-  const pct=salary>0?Math.min(100,Math.round((spent/salary)*100)):0;
-  document.getElementById('sal-d').textContent=fmt(salary);
-  document.getElementById('kpi-sp').textContent=fmt(spent);
-  document.getElementById('kpi-sv').textContent=fmt(Math.max(0,saved));
-  document.getElementById('kpi-rt').textContent=rate+'%';
-  document.getElementById('kpi-en').textContent=expenses.length+' entries this month';
-  document.getElementById('bp-pct').textContent=pct+'%';
-  const f=document.getElementById('bp-f');
-  f.style.width=pct+'%';
-  f.style.background=pct>90?'linear-gradient(90deg,#ff3366,#ff0000)':pct>70?'linear-gradient(90deg,#ffcc00,#ff8800)':'linear-gradient(90deg,#00ff88,#00cc6a)';
-  f.style.boxShadow=pct>90?'0 0 10px #ff3366':pct>70?'0 0 10px #ffcc00':'0 0 10px #00ff88';
-  document.getElementById('bp-mid').textContent=fmt(salary/2);
-  document.getElementById('bp-max').textContent=fmt(salary);
-  renderCats(expenses,spent);renderCharts(expenses);renderTable(expenses);renderMonthly();
+/* ── RENDER ─────────────────────────────── */
+function render() {
+  const lbl = MONTHS[vM]+' '+vY;
+  document.getElementById('m-lbl').textContent = lbl;
+  document.getElementById('sal-month-lbl').textContent = lbl.toUpperCase();
+
+  const { baseSalary, incentive, incentiveNote, totalIncome } = monthSalary;
+  const spent = expenses.reduce((s,e)=>s+Number(e.amount),0);
+  const saved = totalIncome - spent;
+  const rate  = totalIncome > 0 ? Math.round((saved/totalIncome)*100) : 0;
+  const pct   = totalIncome > 0 ? Math.min(100, Math.round((spent/totalIncome)*100)) : 0;
+
+  // KPI
+  document.getElementById('kpi-sal').textContent      = fmt(baseSalary);
+  document.getElementById('kpi-inc').textContent      = fmt(incentive);
+  document.getElementById('kpi-inc-note').textContent = incentiveNote || (incentive>0?'bonus':'no incentive');
+  document.getElementById('kpi-tot').textContent      = fmt(totalIncome);
+  document.getElementById('kpi-sp').textContent       = fmt(spent);
+  document.getElementById('kpi-sv').textContent       = fmt(Math.max(0,saved));
+  document.getElementById('kpi-en').textContent       = expenses.length+' entries';
+  document.getElementById('kpi-rt-sub').textContent   = rate+'% savings rate';
+
+  // Budget bar
+  document.getElementById('bp-pct').textContent = pct+'%';
+  const f = document.getElementById('bp-f');
+  f.style.width      = pct+'%';
+  f.style.background = pct>90?'linear-gradient(90deg,#ff3366,#ff0000)':pct>70?'linear-gradient(90deg,#ffcc00,#ff8800)':'linear-gradient(90deg,#00ff88,#00cc6a)';
+  f.style.boxShadow  = pct>90?'0 0 10px #ff3366':pct>70?'0 0 10px #ffcc00':'0 0 10px #00ff88';
+  document.getElementById('bp-mid').textContent = fmt(totalIncome/2);
+  document.getElementById('bp-max').textContent = fmt(totalIncome);
+
+  renderCats(expenses,spent);
+  renderCharts(expenses);
+  renderTable(expenses);
+  renderMonthly();
+  updateSalaryPreview();
 }
 
 function catMap(exps){const m={};exps.forEach(e=>{m[e.category]=(m[e.category]||0)+Number(e.amount);});return m;}
 
 function renderCats(exps,tot){
-  const m=catMap(exps);const sorted=Object.entries(m).sort((a,b)=>b[1]-a[1]);
+  const m=catMap(exps); const sorted=Object.entries(m).sort((a,b)=>b[1]-a[1]);
   const g=document.getElementById('cat-grid');
   if(!sorted.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📡</div><div class="empty-msg">// NO DATA — ADD EXPENSES</div></div>';return;}
   const mx=sorted[0][1];
   g.innerHTML=sorted.map(([cat,amt])=>{
     const pct=tot>0?Math.round((amt/tot)*100):0;
     const bp=mx>0?Math.round((amt/mx)*100):0;
-    const col=COLORS[cat]||'#888';const ico=cat.split(' ')[0];const nm=cat.slice(ico.length+1);
+    const col=COLORS[cat]||'#888'; const ico=cat.split(' ')[0]; const nm=cat.slice(ico.length+1);
     return`<div class="cat-row"><div class="cat-ico">${ico}</div><div class="cat-inf"><div class="cat-nm">${nm.toUpperCase()}</div><div class="cat-am" style="color:${col}">${fmt(amt)}</div><div class="cat-bw"><div class="cat-bf" style="width:${bp}%;background:${col}"></div></div></div><div class="cat-pc">${pct}%</div></div>`;
   }).join('');
 }
 
 function renderCharts(exps){
-  const m=catMap(exps);const lbs=Object.keys(m);const dts=Object.values(m);const cols=lbs.map(l=>COLORS[l]||'#888');
+  const m=catMap(exps); const lbs=Object.keys(m); const dts=Object.values(m); const cols=lbs.map(l=>COLORS[l]||'#888');
   const cc=document.getElementById('cat-ch').getContext('2d');
   if(catCh)catCh.destroy();
   if(!lbs.length){cc.clearRect(0,0,999,999);catCh=null;}
   else{catCh=new Chart(cc,{type:'doughnut',data:{labels:lbs,datasets:[{data:dts,backgroundColor:cols,borderColor:'#050c14',borderWidth:4,hoverOffset:8}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#6a9ab8',font:{family:'Share Tech Mono',size:10},boxWidth:10,padding:8}},tooltip:{callbacks:{label:c=>' ₹'+Number(c.raw).toLocaleString('en-IN')}}},cutout:'68%'}});}
-  const days=new Date(vY,vM+1,0).getDate();const dm={};
+  const days=new Date(vY,vM+1,0).getDate(); const dm={};
   exps.forEach(e=>{const d=new Date(e.date).getDate();dm[d]=(dm[d]||0)+Number(e.amount);});
-  const dL=Array.from({length:days},(_,i)=>i+1);const dD=dL.map(d=>dm[d]||0);
+  const dL=Array.from({length:days},(_,i)=>i+1); const dD=dL.map(d=>dm[d]||0);
   const dc=document.getElementById('day-ch').getContext('2d');
   if(dayCh)dayCh.destroy();
   dayCh=new Chart(dc,{type:'bar',data:{labels:dL,datasets:[{data:dD,backgroundColor:dD.map(v=>v>0?'#00ff8833':'#0d2a3d'),borderColor:dD.map(v=>v>0?'#00ff88':'#0d2a3d'),borderWidth:1,borderRadius:3}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' ₹'+Number(c.raw).toLocaleString('en-IN')}}},scales:{x:{grid:{color:'#0d2a3d'},ticks:{color:'#2a4a6a',font:{family:'Share Tech Mono',size:9}}},y:{grid:{color:'#0d2a3d'},ticks:{color:'#2a4a6a',font:{family:'Share Tech Mono',size:9},callback:v=>'₹'+v}}}}});
 }
 
 function renderTable(exps){
-  const tb=document.getElementById('exp-tb'),ne=document.getElementById('no-exp');
+  const tb=document.getElementById('exp-tb'), ne=document.getElementById('no-exp');
   document.getElementById('row-ct').textContent=exps.length+' RECORDS';
   const sorted=[...exps].sort((a,b)=>new Date(b.date)-new Date(a.date));
   if(!sorted.length){tb.innerHTML='';ne.style.display='block';return;}
@@ -520,62 +613,82 @@ function renderTable(exps){
 }
 
 function renderMonthly(){
-  const g=document.getElementById('m-grid');const now=new Date();const cards=[];
+  const g=document.getElementById('m-grid'); const now=new Date(); const cards=[];
   for(let i=11;i>=0;i--){
-    const d=new Date(now.getFullYear(),now.getMonth()-i,1);const y=d.getFullYear(),m=d.getMonth();
-    const isV=y===vY&&m===vM;
-    const me=isV?expenses:[];
-    const sp=me.reduce((s,e)=>s+Number(e.amount),0);
-    const sv=Math.max(0,salary-sp);
-    const pct=salary>0?Math.min(100,Math.round((sp/salary)*100)):0;
-    cards.push(`<div class="m-card" onclick="jumpM(${y},${m})"><div class="m-lbl">${MONTHS[m].toUpperCase()} ${y}${isV?' [ ACTIVE ]':''}</div><div class="m-sp">${fmt(sp)}</div><div class="m-sv">SAVED ${fmt(sv)}</div><div class="m-n">${me.length} ENTRIES</div><div class="m-bar"><div class="m-bar-f" style="width:${pct}%"></div></div></div>`);
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const y=d.getFullYear(), m=d.getMonth();
+    const isV = y===vY && m===vM;
+    const sal = salaryCache[`${y}-${m+1}`] || { baseSalary:25000, incentive:0, incentiveNote:'', totalIncome:25000 };
+    const me  = isV ? expenses : [];
+    const sp  = me.reduce((s,e)=>s+Number(e.amount),0);
+    const sv  = Math.max(0, sal.totalIncome - sp);
+    const pct = sal.totalIncome>0 ? Math.min(100,Math.round((sp/sal.totalIncome)*100)) : 0;
+    const incTag = sal.incentive>0 ? `<div class="m-inc-tag">+ ${fmt(sal.incentive)} INCENTIVE</div>` : '';
+    cards.push(`<div class="m-card" onclick="jumpM(${y},${m})">
+      <div class="m-lbl">${MONTHS[m].toUpperCase()} ${y}${isV?' [ ACTIVE ]':''}</div>
+      ${incTag}
+      <div class="m-sp">${fmt(sp)}</div>
+      <div class="m-sv">SAVED ${fmt(sv)}</div>
+      <div class="m-sal">INCOME ${fmt(sal.totalIncome)}</div>
+      <div class="m-n">${me.length} ENTRIES</div>
+      <div class="m-bar"><div class="m-bar-f" style="width:${pct}%"></div></div>
+    </div>`);
   }
   g.innerHTML=cards.join('');
 }
 
-/* NAV */
+/* ── NAV ────────────────────────────────── */
 function showPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');el.classList.add('active');
+  document.getElementById('page-'+id).classList.add('active'); el.classList.add('active');
 }
 function changeMonth(dir){
-  vM+=dir;if(vM>11){vM=0;vY++;}if(vM<0){vM=11;vY--;}
-  expenses=[];render();if(URL_)loadExp();
+  vM+=dir; if(vM>11){vM=0;vY++;} if(vM<0){vM=11;vY--;}
+  expenses=[];
+  monthSalary={baseSalary:25000,incentive:0,incentiveNote:'',totalIncome:25000};
+  document.getElementById('sal-base').value='';
+  document.getElementById('sal-inc').value='';
+  document.getElementById('sal-note').value='';
+  render();
+  initData();
 }
 function jumpM(y,m){
-  vY=y;vM=m;expenses=[];
-  showPage('dash',document.querySelector('.tab'));render();if(URL_)loadExp();
+  vY=y; vM=m; expenses=[];
+  monthSalary={baseSalary:25000,incentive:0,incentiveNote:'',totalIncome:25000};
+  document.getElementById('sal-base').value='';
+  document.getElementById('sal-inc').value='';
+  document.getElementById('sal-note').value='';
+  showPage('dash',document.querySelector('.tab'));
+  render(); initData();
 }
 
-/* HELPERS */
+/* ── HELPERS ─────────────────────────────── */
 function fmt(n){return'₹'+Number(n).toLocaleString('en-IN');}
 function fmtD(s){const d=new Date(s);return String(d.getDate()).padStart(2,'0')+' '+MONTHS[d.getMonth()].slice(0,3).toUpperCase()+' '+d.getFullYear();}
 function toast(msg,er=0){const t=document.getElementById('toast');t.textContent=(er?'⚠ ':'✓ ')+msg;t.className=er?'er show':'show';setTimeout(()=>t.className='',3000);}
 
-/* BOOT */
-const BL=[['INIT FINTRACK_OS v2.0','ok'],['LOADING CHART.JS ENGINE','ok'],['MOUNTING SHEETS ADAPTER','ok'],['VERIFYING SCRIPT ENDPOINT','wa'],['DECRYPTING SALARY CONFIG','ok'],['RENDERING CYBERPUNK UI','ok'],['ALL SYSTEMS NOMINAL','ok']];
+/* ── BOOT ───────────────────────────────── */
+const BL=[['INIT FINTRACK_OS v3.0','ok'],['LOADING CHART.JS ENGINE','ok'],['MOUNTING SHEETS ADAPTER','ok'],['LOADING PER-MONTH SALARY ENGINE','ok'],['LOADING INCENTIVE MODULE','ok'],['RENDERING CYBERPUNK UI','ok'],['ALL SYSTEMS NOMINAL','ok']];
 function runBoot(){
   const c=document.getElementById('blines'),bar=document.getElementById('bbar');let i=0;
   function nx(){
-    if(i>=BL.length){
-      setTimeout(()=>{const b=document.getElementById('boot');b.style.transition='opacity .6s';b.style.opacity='0';setTimeout(()=>b.style.display='none',600);},300);return;
-    }
-    const [msg,type]=BL[i];
+    if(i>=BL.length){setTimeout(()=>{const b=document.getElementById('boot');b.style.transition='opacity .6s';b.style.opacity='0';setTimeout(()=>b.style.display='none',600);},300);return;}
+    const[msg,type]=BL[i];
     const ln=document.createElement('div');ln.className='boot-line';
-    const ic=type==='ok'?'<span class="ok">[  OK  ]</span>':type==='er'?'<span class="er">[ FAIL ]</span>':'<span class="wa">[ WAIT ]</span>';
+    const ic=type==='ok'?'<span class="ok">[  OK  ]</span>':'<span class="wa">[ WAIT ]</span>';
     ln.innerHTML=ic+' '+msg;c.appendChild(ln);
     bar.style.width=((i+1)/BL.length*100)+'%';i++;
     setTimeout(nx,200);
   }nx();
 }
 
-/* START */
+/* ── START ──────────────────────────────── */
 window.addEventListener('load',()=>{
   document.getElementById('f-dt').value=new Date().toISOString().split('T')[0];
-  localStorage.setItem('ft_url', URL_);
-  render();runBoot();
-  initData();
+  document.getElementById('sal-base').addEventListener('input',updateSalaryPreview);
+  document.getElementById('sal-inc').addEventListener('input',updateSalaryPreview);
+  render(); runBoot(); initData();
 });
 </script>
 </body>
